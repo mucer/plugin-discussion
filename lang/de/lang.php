@@ -35,6 +35,7 @@ $lang['wordblock']       = 'Ihr Kommentar wurde als Spam blockiert.';
 $lang['mail_newcomment'] = 'Neuer Kommentar';
 $lang['subscribe']       = 'Kommentare abonnieren';
 $lang['noguests']        = 'Melden sich Sie an um ein Kommentar zu erstellen.';
+$lang['hide_show']       = 'Diskussion anzeigen/verstecken';
 
 $lang['status']          = 'Status';
 $lang['off']             = 'aus';

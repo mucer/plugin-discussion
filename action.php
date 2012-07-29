@@ -106,7 +106,7 @@ class action_plugin_discussion extends DokuWiki_Action_Plugin{
         global $ID;
         global $ACT;
         if($this->_hasDiscussion($title) && $event->data && $ACT != 'admin') {
-            $tocitem = array( 'hid' => 'discussion__section',
+            $tocitem = array( 'hid' => 'discussion__link',
                               'title' => $this->getLang('discussion'),
                               'type' => 'ul',
                               'level' => 1 );
@@ -309,9 +309,9 @@ class action_plugin_discussion extends DokuWiki_Action_Plugin{
             global $MSG;
             $_SESSION[DOKU_COOKIE]['msg'] = $MSG;
             session_write_close();
-            $url = wl($ID);
+            $url = wl($ID, 'showcomments=1');
         } else {
-            $url = wl($ID) . '#comment_' . $cid;
+            $url = wl($ID, 'showcomments=1') . '#comment_' . $cid;
         }
 
         if (function_exists('send_redirect')) {
@@ -347,14 +347,22 @@ class action_plugin_discussion extends DokuWiki_Action_Plugin{
             $data['number'] = 0;
         }
 
+        $visibilityButton = $this->getConf('visibilityButton');
+
         // show discussion wrapper only on certain circumstances
         $cnt = count($data['comments']);
         $keys = @array_keys($data['comments']);
         if($cnt > 1 || ($cnt == 1 && $data['comments'][$keys[0]]['show'] == 1) || $this->getConf('allowguests') || isset($_SERVER['REMOTE_USER'])) {
             $show = true;
+            // hide discussion if toggle button is active and parameter showcomments not set
+            $hidden = ($visibilityButton && !isset($_REQUEST['showcomments'])) ? ' style="display:none"' : '';
+
+            // use span before div, so toc will work for hidden discussions
+            ptln('<span id="discussion__link"></span>');
+
             // section title
             $title = ($data['title'] ? hsc($data['title']) : $this->getLang('discussion'));
-            ptln('<div class="comment_wrapper" id="comment_wrapper">'); // the id value is used for visibility toggling the section
+            ptln('<div class="comment_wrapper" id="comment_wrapper"'.$hidden.'>'); // the id value is used for visibility toggling the section
             ptln('<h2><a name="discussion__section" id="discussion__section">', 2);
             ptln($title, 4);
             ptln('</a></h2>', 2);
@@ -385,7 +393,7 @@ class action_plugin_discussion extends DokuWiki_Action_Plugin{
         }
         
         // check for toggle print configuration
-        if($this->getConf('visibilityButton')) {           
+        if($visibilityButton) {
             // print the hide/show discussion section button
             $this->_print_toggle_button();
         }
@@ -724,14 +732,8 @@ class action_plugin_discussion extends DokuWiki_Action_Plugin{
                 strftime('%Y-%m-%dT%H:%M:%SZ', $modified).'">'.dformat($modified, $conf['dformat']).
                 '</abbr>)';
         ptln($head, 8);
-        ptln('</div>', 6); // class="comment_head"
 
-        // main comment content
-        ptln('<div class="comment_body entry-content"'.
-                ($this->getConf('useavatar') ? $this->_get_style() : '').'>', 6);
-        echo ($HIGH?html_hilight($comment['xhtml'],$HIGH):$comment['xhtml']).DOKU_LF;
-        ptln('</div>', 6); // class="comment_body"
-
+        // show buttons in the header
         if ($visible) {
             ptln('<div class="comment_buttons">', 6);
 
@@ -749,6 +751,14 @@ class action_plugin_discussion extends DokuWiki_Action_Plugin{
             }
             ptln('</div>', 6); // class="comment_buttons"
         }
+        ptln('</div>', 6); // class="comment_head"
+
+        // main comment content
+        ptln('<div class="comment_body entry-content"'.
+                ($this->_use_avatar() ? $this->_get_style() : '').'>', 6);
+        echo ($HIGH?html_hilight($comment['xhtml'],$HIGH):$comment['xhtml']).DOKU_LF;
+        ptln('</div>', 6); // class="comment_body"
+
         ptln('</div>', 4); // class="hentry"
     }
 
@@ -802,7 +812,7 @@ class action_plugin_discussion extends DokuWiki_Action_Plugin{
      */
     function _print_toggle_button() {
         ptln('<div id="toggle_button" class="toggle_button" style="text-align: right;">');
-        ptln('<input type="submit" id="discussion__btn_toggle_visibility" title="Toggle Visibiliy" class="button" value="Hide/Show">');
+        ptln('<input type="submit" id="discussion__btn_toggle_visibility" class="button" value="'.$this->getLang('hide_show').'">');
         ptln('</div>');
     }
     

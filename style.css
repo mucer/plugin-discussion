@@ -94,8 +94,7 @@ div.dokuwiki div.comment_buttons {
   float: right;
   font-size: 10px;
   cursor: pointer;
-  margin-top: -21px;
-  padding-bottom: 1em;
+  margin-top: -7px;
 }
 
 div.dokuwiki div.comment_buttons input.button {
@@ -104,13 +103,13 @@ div.dokuwiki div.comment_buttons input.button {
   background-color: __background__;
   vertical-align: middle;
   text-decoration: none;
-  padding: 0;
+  padding: 0 1px 0 1px;
   margin: 0 0 0 0.5em;
 }
 
 div.dokuwiki div.toggle_button {
-  text-align: right;
-
+  clear: both;
+  margin: 0.5em 0 0 0;
 }
 
 div.dokuwiki div.toggle_button input.button {
@@ -119,8 +118,7 @@ div.dokuwiki div.toggle_button input.button {
   background-color: __background__;
   vertical-align: middle;
   text-decoration: none;
-  padding: 0;
-  margin: 0 12px 0 0;
+  padding: 1px;
   font-size: 10px;
 }
 

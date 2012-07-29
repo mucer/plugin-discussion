@@ -92,6 +92,13 @@ function discussion_toggle_visibility() {
 	}
 }
 
+/**
+ * Shows the discussion
+ */
+function discussion_show() {
+	$('comment_wrapper').style.display = "block";
+}
+
 // init toolbar
 addInitEvent(function() {
     if(typeof window.initToolbar == 'function') {
@@ -118,4 +125,11 @@ addInitEvent(function() {
 	var togglebtn = $('discussion__btn_toggle_visibility');
 	if(!togglebtn) return;
 	addEvent(togglebtn, 'click', discussion_toggle_visibility);
+});
+
+// discussion in toc clicked -> show discussion
+addInitEvent(function() {
+	var togglebtn = jQuery('a[href="#discussion__link"]');
+	if(!togglebtn) return;
+	addEvent(togglebtn, 'click', discussion_show);
 });

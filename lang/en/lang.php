@@ -36,6 +36,7 @@ $lang['moderation']      = 'Your comment has been added and awaits moderation.';
 $lang['mail_newcomment'] = 'New Comment';
 $lang['subscribe']       = 'Subscribe to comments';
 $lang['noguests']        = 'You could leave a comment if you were logged in.';
+$lang['hide_show']       = 'Hide/show discussion';
 
 $lang['status']          = 'Status';
 $lang['off']             = 'off';
