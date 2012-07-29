@@ -57,7 +57,7 @@ class helper_plugin_discussion extends DokuWiki_Plugin {
      * Returns the link to the discussion section of a page
      */
     function td($id, $num = NULL) {
-        $section = '#discussion__section';
+        $section = '#discussion__link';
 
         if (!isset($num)) {
             $cfile = metaFN($id, '.comments');
@@ -71,7 +71,7 @@ class helper_plugin_discussion extends DokuWiki_Plugin {
         elseif ($num == 1) $comment = '1&nbsp;'.$this->getLang('comment');
         else $comment = $num.'&nbsp;'.$this->getLang('comments');
 
-        return '<a href="'.wl($id).$section.'" class="wikilink1" title="'.$id.$section.'">'.
+        return '<a href="'.wl($id, 'showcomments=1').$section.'" class="wikilink1" title="'.$id.$section.'">'.
             $comment.'</a>';
     }
 
@@ -118,7 +118,7 @@ class helper_plugin_discussion extends DokuWiki_Plugin {
                     'status'   => $status,
                     'perm'     => $perm,
                     'exists'   => true,
-                    'anchor'   => 'discussion__section',
+                    'anchor'   => 'discussion__link',
                     );
         }
 
