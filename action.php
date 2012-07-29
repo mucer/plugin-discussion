@@ -309,9 +309,14 @@ class action_plugin_discussion extends DokuWiki_Action_Plugin{
             global $MSG;
             $_SESSION[DOKU_COOKIE]['msg'] = $MSG;
             session_write_close();
-            $url = wl($ID, 'showcomments=1');
+            $url = wl($ID, 'showcomments=1', true, '&');
         } else {
-            $url = wl($ID, 'showcomments=1') . '#comment_' . $cid;
+            $url = wl($ID, 'showcomments=1', true, '&');
+			// if no cid is given -> jump to discussion start
+            if (isset($cid))
+                $url .= '#comment_' . $cid;
+            else
+                $url .= '#discussion__link';
         }
 
         if (function_exists('send_redirect')) {
@@ -355,7 +360,8 @@ class action_plugin_discussion extends DokuWiki_Action_Plugin{
         if($cnt > 1 || ($cnt == 1 && $data['comments'][$keys[0]]['show'] == 1) || $this->getConf('allowguests') || isset($_SERVER['REMOTE_USER'])) {
             $show = true;
             // hide discussion if toggle button is active and parameter showcomments not set
-            $hidden = ($visibilityButton && !isset($_REQUEST['showcomments'])) ? ' style="display:none"' : '';
+            $hidden = ($visibilityButton && !isset($_REQUEST['showcomments']) && !isset($reply) && !isset($edit)) 
+				? ' style="display:none"' : '';
 
             // use span before div, so toc will work for hidden discussions
             ptln('<span id="discussion__link"></span>');
@@ -605,6 +611,7 @@ class action_plugin_discussion extends DokuWiki_Action_Plugin{
                 $data['number'] = $this->_count($data);
 
                 $type = 'dc'; // delete comment
+                $cid = NULL; // redirect not longer possible
 
             } else {                   // save changed comment
                 $xhtml = $this->_render($raw);
